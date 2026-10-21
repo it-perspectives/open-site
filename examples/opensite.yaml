@@ -1,0 +1,697 @@
+# yaml-language-server: $schema=../schemas/opensite-0.1.0.schema.json
+opensite: 0.1.0
+info:
+  title: Shop website
+  version: 1.0.0
+  description: Public pages and stable component addresses shared by developers and QA.
+pages:
+  catalog:
+    title: Product catalog
+    path: /catalog
+    searchParams:
+      q:
+        description: Search phrase. An empty phrase shows all products.
+        type: string
+        default: ""
+        maxLength: 120
+        examples:
+          - coffee
+      page:
+        description: One-based result page.
+        type: integer
+        default: 1
+        minimum: 1
+        examples:
+          - 2
+      sort:
+        description: Product sorting order.
+        type: string
+        enum:
+          - relevance
+          - price-asc
+          - price-desc
+        default: relevance
+      inStock:
+        description: Restrict results to available products.
+        type: boolean
+        examples:
+          - true
+      tag:
+        description: Selected tags; repeat the query key for multiple tags.
+        type: array
+        examples:
+          - - coffee
+            - sale
+        maxItems: 10
+    components:
+      search:
+        description: Catalog search field.
+        role: searchbox
+        locator:
+          by: role
+          name: Search products
+      filters:
+        description: Filter region.
+        role: region
+        locator:
+          by: testId
+          value: catalog-filters
+        components:
+          inStock:
+            description: Availability checkbox within the filter region.
+            role: checkbox
+            locator:
+              by: label
+              value: In stock
+      results:
+        description: Product result list. Items are children of this list.
+        role: list
+        locator:
+          by: role
+          name: Products
+        components:
+          items:
+            description: Matching product cards; tests can assert count or filter a card.
+            role: listitem
+            locator:
+              by: role
+      header:
+        $ref: "#/definitions/components/header"
+      loading:
+        description: Catalog loading indicator.
+        role: status
+        locator:
+          by: testId
+          value: catalog-loading
+      empty:
+        description: No matching products.
+        role: status
+        locator:
+          by: testId
+          value: catalog-empty
+      error:
+        description: Catalog load failure.
+        role: alert
+        locator:
+          by: testId
+          value: catalog-error
+    meta:
+      tags:
+        - catalog
+        - smoke
+      criticality: critical
+      owner: Commerce QA
+      requirements:
+        - SHOP-SEARCH-1
+    defaultState: ready
+    states:
+      ready:
+        description: Products have loaded.
+        expect:
+          results:
+            presence: required
+            visibility: visible
+          loading:
+            presence: absent
+          empty:
+            presence: absent
+          error:
+            presence: absent
+      loading:
+        description: Products are loading.
+        expect:
+          loading:
+            visibility: visible
+          results:
+            presence: absent
+          empty:
+            presence: absent
+          error:
+            presence: absent
+      empty:
+        description: Search has no matches.
+        expect:
+          empty:
+            visibility: visible
+            text:
+              equals: No products found
+          results:
+            presence: absent
+          loading:
+            presence: absent
+          error:
+            presence: absent
+      error:
+        description: The catalog cannot be shown.
+        expect:
+          error:
+            visibility: visible
+          results:
+            presence: absent
+          loading:
+            presence: absent
+          empty:
+            presence: absent
+    variants:
+      desktop:
+        expect:
+          filters:
+            visibility: visible
+      mobile:
+        expect:
+          filters:
+            visibility: hidden
+      russian:
+        expect:
+          empty:
+            text:
+              equals: Товары не найдены
+    invalidURLs:
+      negativePage:
+        description: Negative pagination shows an error.
+        input:
+          search: page=-1
+        outcome:
+          state: error
+      normalizeZero:
+        description: Zero pagination is normalized to page one.
+        input:
+          search: page=0
+        outcome:
+          state: ready
+          url:
+            path: /catalog
+            search: page=1
+      unknownQuery:
+        description: Unsupported query parameters show an error.
+        input:
+          search: unsupported=1
+        outcome:
+          state: error
+  product:
+    title: Product details
+    path: /products/{productId}
+    pathParams:
+      productId:
+        description: Product identifier from a test fixture.
+        pattern: ^[A-Za-z0-9_-]+$
+        examples:
+          - coffee-1
+    components:
+      title:
+        description: Product heading.
+        role: heading
+        locator:
+          by: testId
+          value: product-title
+      addToCart:
+        description: Add the selected product to the cart.
+        role: button
+        locator:
+          by: role
+          name: Add to cart
+      header:
+        $ref: "#/definitions/components/header"
+    invalidURLs:
+      missingProduct:
+        description: A well-formed ID that is absent in fixtures returns not found.
+        input:
+          path: /products/missing-fixture-id
+        outcome:
+          statusCode: 404
+  login:
+    title: Sign in
+    path: /login
+    components:
+      form:
+        description: Sign-in form.
+        role: form
+        locator:
+          by: role
+          name: Sign in
+        components:
+          email:
+            description: Account email field.
+            role: textbox
+            locator:
+              by: label
+              value: Email
+          submit:
+            description: Submit credentials.
+            role: button
+            locator:
+              by: role
+              name: Sign in
+          code:
+            description: One-time sign-in code field.
+            role: textbox
+            locator:
+              by: placeholder
+              value: 6-digit code
+      header:
+        $ref: "#/definitions/components/header"
+  account:
+    title: Account profile
+    path: /account
+    meta:
+      tags:
+        - account
+        - forms
+        - notifications
+      criticality: high
+      owner: Account QA
+      requirements:
+        - SHOP-PROFILE-1
+    components:
+      header:
+        $ref: "#/definitions/components/header"
+      form:
+        description: Edit profile form.
+        role: form
+        locator:
+          by: testId
+          value: profile-form
+        components:
+          displayName:
+            description: Public display name.
+            role: textbox
+            locator:
+              by: testId
+              value: display-name
+          email:
+            description: Contact email.
+            role: textbox
+            locator:
+              by: testId
+              value: profile-email
+          emailError:
+            description: Email validation error.
+            role: alert
+            locator:
+              by: testId
+              value: email-error
+          submit:
+            description: Save profile.
+            role: button
+            locator:
+              by: testId
+              value: profile-save
+            expect:
+              enabled: true
+              accessibleName:
+                equals: Save profile
+      saveNotice:
+        description: Profile notification.
+        role: status
+        locator:
+          by: testId
+          value: profile-saved
+        components:
+          message:
+            description: Notification message.
+            role: generic
+            locator:
+              by: testId
+              value: profile-saved-message
+          close:
+            description: Dismiss notification.
+            role: button
+            locator:
+              by: testId
+              value: profile-saved-close
+          action:
+            description: Notification action.
+            role: button
+            locator:
+              by: testId
+              value: profile-saved-action
+      errorNotice:
+        description: Profile notification.
+        role: alert
+        locator:
+          by: testId
+          value: profile-failed
+        components:
+          message:
+            description: Notification message.
+            role: generic
+            locator:
+              by: testId
+              value: profile-failed-message
+          close:
+            description: Dismiss notification.
+            role: button
+            locator:
+              by: testId
+              value: profile-failed-close
+          action:
+            description: Notification action.
+            role: button
+            locator:
+              by: testId
+              value: profile-failed-action
+      accessError:
+        description: Access denied.
+        role: alert
+        locator:
+          by: testId
+          value: account-forbidden
+    defaultState: ready
+    states:
+      ready:
+        description: Profile can be edited.
+        expect:
+          form:
+            visibility: visible
+          form.submit:
+            enabled: true
+          saveNotice:
+            presence: absent
+          errorNotice:
+            presence: absent
+          accessError:
+            presence: absent
+      saving:
+        description: Profile update is in progress.
+        expect:
+          form.submit:
+            enabled: false
+          saveNotice:
+            presence: absent
+          errorNotice:
+            presence: absent
+      saved:
+        description: Profile was saved.
+        expect:
+          saveNotice:
+            visibility: visible
+            count:
+              min: 1
+              max: 1
+          errorNotice:
+            presence: absent
+          form.submit:
+            enabled: true
+      error:
+        description: Profile update failed.
+        expect:
+          errorNotice:
+            visibility: visible
+          saveNotice:
+            presence: absent
+          form.submit:
+            enabled: true
+      forbidden:
+        description: The authenticated role cannot access the profile.
+        expect:
+          form:
+            presence: absent
+          accessError:
+            visibility: visible
+    variants:
+      desktop: {}
+      mobile: {}
+      russian:
+        expect:
+          form.submit:
+            accessibleName:
+              equals: Сохранить профиль
+        snackbars:
+          saved:
+            message:
+              equals: Профиль сохранён
+          failed:
+            message:
+              equals: Не удалось сохранить профиль
+    access:
+      authentication: required
+      roles:
+        - customer
+      onUnauthenticated:
+        page: login
+      onForbidden:
+        state: forbidden
+    forms:
+      profile:
+        description: Profile details submitted by the user.
+        component: form
+        submit: form.submit
+        validation: submit
+        fields:
+          displayName:
+            description: Public display name.
+            component: form.displayName
+            type: string
+            inputType: text
+            required: true
+            minLength: 1
+            maxLength: 80
+            examples:
+              - Ada
+          email:
+            description: Contact email, using this application’s declared pattern.
+            component: form.email
+            type: string
+            inputType: email
+            required: true
+            pattern: ^[^@\s]+@[^@\s]+\.[^@\s]+$
+            examples:
+              - ada@example.invalid
+            errors:
+              required:
+                description: Email was omitted.
+                component: form.emailError
+                message:
+                  equals: Email is required
+              format:
+                description: Email does not match the accepted pattern.
+                component: form.emailError
+                message:
+                  equals: Enter a valid email
+        cases:
+          valid:
+            description: Valid profile data.
+            values:
+              displayName: Ada
+              email: ada@example.invalid
+            valid: true
+          missingEmail:
+            description: Required email is absent.
+            values:
+              displayName: Ada
+            valid: false
+            errors:
+              - field: email
+                error: required
+          invalidEmail:
+            description: Malformed email.
+            values:
+              displayName: Ada
+              email: not-an-email
+            valid: false
+            errors:
+              - field: email
+                error: format
+    snackbars:
+      saved:
+        description: Successful profile update notification.
+        component: saveNotice
+        variant: success
+        message:
+          equals: Profile saved
+        messageComponent: saveNotice.message
+        announcement: polite
+        focus: preserve
+        actions:
+          undo:
+            description: Undo the last profile change.
+            component: saveNotice.action
+            dismisses: true
+        dismiss:
+          close: saveNotice.close
+          escape: true
+        lifetime:
+          mode: timed
+          durationMs: 8000
+          toleranceMs: 500
+          pauseOnHover: true
+          pauseOnFocus: true
+        checks:
+          appearWithinMs: 2000
+          dismissWithinMs: 500
+        meta:
+          tags:
+            - notifications
+            - smoke
+          requirements:
+            - SHOP-PROFILE-NOTICE-1
+      failed:
+        description: Persistent profile failure notification.
+        component: errorNotice
+        variant: error
+        message:
+          equals: Profile could not be saved
+        messageComponent: errorNotice.message
+        announcement: assertive
+        focus: preserve
+        actions:
+          retry:
+            description: Retry saving the profile.
+            component: errorNotice.action
+            dismisses: false
+        dismiss:
+          close: errorNotice.close
+          escape: true
+        lifetime:
+          mode: persistent
+        checks:
+          appearWithinMs: 2000
+          dismissWithinMs: 500
+    transitions:
+      save:
+        description: Successful profile submission.
+        trigger:
+          event: submit
+          form: profile
+        fromStates:
+          - ready
+          - error
+        preconditions:
+          - The profile fixture exists and the update service accepts the values.
+        outcome:
+          state: saved
+          snackbars:
+            - saved
+      invalidEmail:
+        description: Submit malformed email.
+        trigger:
+          event: submit
+          form: profile
+        fromStates:
+          - ready
+        preconditions:
+          - Use the invalidEmail form case.
+        outcome:
+          state: ready
+          fieldErrors:
+            - form: profile
+              field: email
+              error: format
+      failedSave:
+        description: The update service rejects the submission.
+        trigger:
+          event: submit
+          form: profile
+        fromStates:
+          - ready
+        preconditions:
+          - The test arranges a profile update failure.
+        outcome:
+          state: error
+          snackbars:
+            - failed
+      undo:
+        description: Undo a successful update.
+        trigger:
+          event: snackbarAction
+          snackbar: saved
+          action: undo
+        fromStates:
+          - saved
+        outcome:
+          state: ready
+      closeSaved:
+        description: Close the saved notification.
+        trigger:
+          event: snackbarDismiss
+          snackbar: saved
+          reason: close
+        fromStates:
+          - saved
+        outcome:
+          state: ready
+      expireSaved:
+        description: Automatic notification expiry.
+        trigger:
+          event: snackbarDismiss
+          snackbar: saved
+          reason: timeout
+        fromStates:
+          - saved
+        outcome:
+          state: ready
+      escapeSaved:
+        description: Dismiss the notification with Escape.
+        trigger:
+          event: snackbarDismiss
+          snackbar: saved
+          reason: escape
+        fromStates:
+          - saved
+        outcome:
+          state: ready
+      retry:
+        description: Retry a failed update.
+        trigger:
+          event: snackbarAction
+          snackbar: failed
+          action: retry
+        fromStates:
+          - error
+        preconditions:
+          - The retry is accepted by the update service.
+        outcome:
+          state: saved
+          snackbars:
+            - saved
+          expect:
+            errorNotice:
+              presence: absent
+meta:
+  tags:
+    - web
+    - smoke
+  criticality: high
+  owner: Web QA
+  requirements:
+    - SHOP-UI-1
+definitions:
+  components:
+    header:
+      description: Shared site header.
+      role: banner
+      locator:
+        by: testId
+        value: site-header
+      components:
+        home:
+          description: Go to the catalog.
+          role: link
+          locator:
+            by: testId
+            value: home-link
+variants:
+  desktop:
+    description: Desktop layout.
+    locale: en-US
+    viewport:
+      width: 1440
+      height: 900
+    flags:
+      compactToolbar: false
+  mobile:
+    description: Compact layout.
+    locale: en-US
+    viewport:
+      width: 390
+      height: 844
+    flags:
+      compactToolbar: true
+  russian:
+    description: Russian interface.
+    locale: ru-RU
+snackbarPolicy:
+  placement: bottom-end
+  maxVisible: 3
+  order: newestFirst
+  overflow: queue

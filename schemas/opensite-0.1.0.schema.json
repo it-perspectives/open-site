@@ -1,0 +1,2396 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/it-perspectives/open-site/main/schemas/opensite-0.1.0.schema.json",
+  "title": "OpenSite 0.1.0 website contract",
+  "description": "Framework-independent website QA contracts: pages, components, expectations, states, variants, access, forms, outcomes, reusable components, metadata, and snackbars.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/it-perspectives/open-site/main/schemas/opensite-0.1.0.schema.json"
+    },
+    "opensite": {
+      "const": "0.1.0"
+    },
+    "info": {
+      "$ref": "#/$defs/info"
+    },
+    "pages": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/page"
+      },
+      "minProperties": 1
+    },
+    "definitions": {
+      "$ref": "#/$defs/definitions"
+    },
+    "variants": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/variant"
+      },
+      "minProperties": 1
+    },
+    "meta": {
+      "$ref": "#/$defs/meta"
+    },
+    "snackbarPolicy": {
+      "$ref": "#/$defs/snackbarPolicy"
+    }
+  },
+  "required": [
+    "opensite",
+    "info",
+    "pages"
+  ],
+  "patternProperties": {
+    "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "info": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "version"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "pathParams": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/pathParam"
+          }
+        },
+        "searchParams": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/searchParam"
+          }
+        },
+        "components": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/componentEntry"
+          },
+          "minProperties": 0
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        },
+        "expect": {
+          "$ref": "#/$defs/expectations"
+        },
+        "defaultState": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "states": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/state"
+          },
+          "minProperties": 1
+        },
+        "variants": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/variantOverride"
+          },
+          "minProperties": 1
+        },
+        "access": {
+          "$ref": "#/$defs/access"
+        },
+        "forms": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/form"
+          },
+          "minProperties": 0
+        },
+        "transitions": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/transition"
+          },
+          "minProperties": 0
+        },
+        "invalidURLs": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/invalidURL"
+          },
+          "minProperties": 0
+        },
+        "snackbars": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/snackbar"
+          },
+          "minProperties": 0
+        },
+        "snackbarPolicy": {
+          "$ref": "#/$defs/snackbarPolicy"
+        }
+      },
+      "required": [
+        "title",
+        "path"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "pathParam": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "searchParam": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "type": {
+          "enum": [
+            "string",
+            "integer",
+            "number",
+            "boolean",
+            "array"
+          ]
+        },
+        "required": {
+          "type": "boolean",
+          "default": false
+        },
+        "deprecated": {
+          "type": "boolean",
+          "default": false
+        },
+        "default": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "enum": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "minLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "minItems": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "maxItems": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "description",
+        "type"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "string"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "pattern"
+                  ],
+                  "properties": {
+                    "pattern": {}
+                  }
+                },
+                {
+                  "required": [
+                    "minLength"
+                  ],
+                  "properties": {
+                    "minLength": {}
+                  }
+                },
+                {
+                  "required": [
+                    "maxLength"
+                  ],
+                  "properties": {
+                    "maxLength": {}
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "integer",
+                  "number"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "minimum"
+                  ],
+                  "properties": {
+                    "minimum": {}
+                  }
+                },
+                {
+                  "required": [
+                    "maximum"
+                  ],
+                  "properties": {
+                    "maximum": {}
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "array"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "minItems"
+                  ],
+                  "properties": {
+                    "minItems": {}
+                  }
+                },
+                {
+                  "required": [
+                    "maxItems"
+                  ],
+                  "properties": {
+                    "maxItems": {}
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "component": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "alertdialog",
+            "application",
+            "article",
+            "banner",
+            "blockquote",
+            "button",
+            "caption",
+            "cell",
+            "checkbox",
+            "code",
+            "columnheader",
+            "combobox",
+            "complementary",
+            "contentinfo",
+            "definition",
+            "deletion",
+            "dialog",
+            "directory",
+            "document",
+            "emphasis",
+            "feed",
+            "figure",
+            "form",
+            "generic",
+            "grid",
+            "gridcell",
+            "group",
+            "heading",
+            "img",
+            "insertion",
+            "link",
+            "list",
+            "listbox",
+            "listitem",
+            "log",
+            "main",
+            "marquee",
+            "math",
+            "meter",
+            "menu",
+            "menubar",
+            "menuitem",
+            "menuitemcheckbox",
+            "menuitemradio",
+            "navigation",
+            "none",
+            "note",
+            "option",
+            "paragraph",
+            "presentation",
+            "progressbar",
+            "radio",
+            "radiogroup",
+            "region",
+            "row",
+            "rowgroup",
+            "rowheader",
+            "scrollbar",
+            "search",
+            "searchbox",
+            "separator",
+            "slider",
+            "spinbutton",
+            "status",
+            "strong",
+            "subscript",
+            "superscript",
+            "switch",
+            "tab",
+            "table",
+            "tablist",
+            "tabpanel",
+            "term",
+            "textbox",
+            "time",
+            "timer",
+            "toolbar",
+            "tooltip",
+            "tree",
+            "treegrid",
+            "treeitem"
+          ],
+          "description": "Expected ARIA role from the fixed OpenSite role vocabulary."
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "components": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/componentEntry"
+          },
+          "minProperties": 0
+        },
+        "expect": {
+          "$ref": "#/$defs/expectation"
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        }
+      },
+      "required": [
+        "description",
+        "role",
+        "locator"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "locator": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "const": "role"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "exact": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "required": [
+            "by"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "const": "testId"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "by",
+            "value"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "const": "label"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "exact": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "required": [
+            "by",
+            "value"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "const": "placeholder"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "exact": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "required": [
+            "by",
+            "value"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "const": "text"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "exact": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "required": [
+            "by",
+            "value"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "const": "altText"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "exact": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "required": [
+            "by",
+            "value"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "const": "title"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "exact": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "required": [
+            "by",
+            "value"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "const": "css"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "by",
+            "value"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "criticality": {
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "critical"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "matcher": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "equals": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "equals"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "contains": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contains"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pattern": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "pattern"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "count": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "min"
+          ],
+          "properties": {
+            "min": {}
+          }
+        },
+        {
+          "required": [
+            "max"
+          ],
+          "properties": {
+            "max": {}
+          }
+        }
+      ]
+    },
+    "expectation": {
+      "type": "object",
+      "properties": {
+        "presence": {
+          "enum": [
+            "required",
+            "optional",
+            "absent"
+          ]
+        },
+        "visibility": {
+          "enum": [
+            "visible",
+            "hidden",
+            "any"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "checked": {
+          "enum": [
+            true,
+            false,
+            "mixed"
+          ]
+        },
+        "selected": {
+          "type": "boolean"
+        },
+        "expanded": {
+          "type": "boolean"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "accessibleName": {
+          "$ref": "#/$defs/matcher"
+        },
+        "text": {
+          "$ref": "#/$defs/matcher"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "count": {
+          "$ref": "#/$defs/count"
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "expectations": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/expectation"
+      },
+      "minProperties": 0
+    },
+    "componentEntry": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/component"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$ref": {
+              "type": "string",
+              "pattern": "^#/definitions/components/[A-Za-z][A-Za-z0-9_-]*$"
+            }
+          },
+          "required": [
+            "$ref"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "definitions": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/componentEntry"
+          },
+          "minProperties": 0
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "variant": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "viewport": {
+          "type": "object",
+          "properties": {
+            "width": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "width",
+            "height"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        "flags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "variantOverride": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expect": {
+          "$ref": "#/$defs/expectations"
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        },
+        "snackbars": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/snackbarOverride"
+          }
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "state": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expect": {
+          "$ref": "#/$defs/expectations"
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        },
+        "snackbars": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/snackbarOverride"
+          }
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "fieldError": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "component": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+        },
+        "message": {
+          "$ref": "#/$defs/matcher"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "formField": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "type": {
+          "enum": [
+            "string",
+            "integer",
+            "number",
+            "boolean",
+            "array"
+          ]
+        },
+        "required": {
+          "type": "boolean",
+          "default": false
+        },
+        "deprecated": {
+          "type": "boolean",
+          "default": false
+        },
+        "default": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "enum": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "minLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "minItems": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxItems": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "component": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+        },
+        "inputType": {
+          "enum": [
+            "text",
+            "email",
+            "password",
+            "search",
+            "tel",
+            "url",
+            "number",
+            "date",
+            "time",
+            "datetime-local",
+            "month",
+            "week",
+            "checkbox",
+            "radio",
+            "select",
+            "textarea"
+          ]
+        },
+        "errors": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/fieldError"
+          },
+          "minProperties": 0
+        }
+      },
+      "required": [
+        "description",
+        "type",
+        "component"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "string"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "pattern"
+                  ],
+                  "properties": {
+                    "pattern": {}
+                  }
+                },
+                {
+                  "required": [
+                    "minLength"
+                  ],
+                  "properties": {
+                    "minLength": {}
+                  }
+                },
+                {
+                  "required": [
+                    "maxLength"
+                  ],
+                  "properties": {
+                    "maxLength": {}
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "integer",
+                  "number"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "minimum"
+                  ],
+                  "properties": {
+                    "minimum": {}
+                  }
+                },
+                {
+                  "required": [
+                    "maximum"
+                  ],
+                  "properties": {
+                    "maximum": {}
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "array"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "minItems"
+                  ],
+                  "properties": {
+                    "minItems": {}
+                  }
+                },
+                {
+                  "required": [
+                    "maxItems"
+                  ],
+                  "properties": {
+                    "maxItems": {}
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "caseError": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "error": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        }
+      },
+      "required": [
+        "field",
+        "error"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "formCase": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "errors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/caseError"
+          }
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        },
+        "validation": {
+          "enum": [
+            "constraints",
+            "application"
+          ]
+        }
+      },
+      "required": [
+        "description",
+        "values",
+        "valid"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "form": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "component": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+        },
+        "submit": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+        },
+        "validation": {
+          "enum": [
+            "submit",
+            "blur",
+            "input"
+          ]
+        },
+        "fields": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/formField"
+          },
+          "minProperties": 1
+        },
+        "cases": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/formCase"
+          },
+          "minProperties": 0
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        }
+      },
+      "required": [
+        "description",
+        "component",
+        "fields"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "fieldErrorResult": {
+      "type": "object",
+      "properties": {
+        "form": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "field": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "error": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        }
+      },
+      "required": [
+        "form",
+        "field",
+        "error"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "state": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "snackbars": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          }
+        },
+        "expect": {
+          "$ref": "#/$defs/expectations"
+        },
+        "fieldErrors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/fieldErrorResult"
+          }
+        },
+        "statusCode": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 599
+        },
+        "url": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "pattern": "^/(?!/)"
+            },
+            "search": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "anyOf": [
+            {
+              "required": [
+                "path"
+              ],
+              "properties": {
+                "path": {}
+              }
+            },
+            {
+              "required": [
+                "search"
+              ],
+              "properties": {
+                "search": {}
+              }
+            }
+          ]
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "page"
+          ],
+          "properties": {
+            "page": {}
+          }
+        },
+        {
+          "required": [
+            "state"
+          ],
+          "properties": {
+            "state": {}
+          }
+        },
+        {
+          "required": [
+            "snackbars"
+          ],
+          "properties": {
+            "snackbars": {}
+          }
+        },
+        {
+          "required": [
+            "expect"
+          ],
+          "properties": {
+            "expect": {}
+          }
+        },
+        {
+          "required": [
+            "fieldErrors"
+          ],
+          "properties": {
+            "fieldErrors": {}
+          }
+        },
+        {
+          "required": [
+            "statusCode"
+          ],
+          "properties": {
+            "statusCode": {}
+          }
+        },
+        {
+          "required": [
+            "url"
+          ],
+          "properties": {
+            "url": {}
+          }
+        }
+      ]
+    },
+    "access": {
+      "type": "object",
+      "properties": {
+        "authentication": {
+          "enum": [
+            "required",
+            "optional",
+            "forbidden"
+          ]
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "onUnauthenticated": {
+          "$ref": "#/$defs/outcome"
+        },
+        "onForbidden": {
+          "$ref": "#/$defs/outcome"
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "trigger": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "event": {
+              "const": "activate"
+            },
+            "component": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+            }
+          },
+          "required": [
+            "event",
+            "component"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "event": {
+              "const": "change"
+            },
+            "component": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+            }
+          },
+          "required": [
+            "event",
+            "component"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "event": {
+              "const": "submit"
+            },
+            "form": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+            }
+          },
+          "required": [
+            "event",
+            "form"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "event": {
+              "const": "key"
+            },
+            "component": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "event",
+            "component",
+            "key"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "event": {
+              "const": "snackbarAction"
+            },
+            "snackbar": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+            },
+            "action": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+            }
+          },
+          "required": [
+            "event",
+            "snackbar",
+            "action"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "event": {
+              "const": "snackbarDismiss"
+            },
+            "snackbar": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+            },
+            "reason": {
+              "enum": [
+                "close",
+                "escape",
+                "timeout"
+              ]
+            }
+          },
+          "required": [
+            "event",
+            "snackbar",
+            "reason"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "transition": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "trigger": {
+          "$ref": "#/$defs/trigger"
+        },
+        "fromStates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          }
+        },
+        "variants": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          }
+        },
+        "preconditions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        }
+      },
+      "required": [
+        "description",
+        "trigger",
+        "outcome"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "invalidURL": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "input": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "pattern": "^/(?!/)"
+            },
+            "search": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false,
+          "anyOf": [
+            {
+              "required": [
+                "path"
+              ],
+              "properties": {
+                "path": {}
+              }
+            },
+            {
+              "required": [
+                "search"
+              ],
+              "properties": {
+                "search": {}
+              }
+            }
+          ]
+        },
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        }
+      },
+      "required": [
+        "description",
+        "input",
+        "outcome"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "snackbarAction": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "component": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+        },
+        "dismisses": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "description",
+        "component"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "lifetime": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "const": "persistent"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "const": "timed"
+            },
+            "durationMs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "toleranceMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "pauseOnHover": {
+              "type": "boolean"
+            },
+            "pauseOnFocus": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "mode",
+            "durationMs"
+          ],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "snackbarChecks": {
+      "type": "object",
+      "properties": {
+        "appearWithinMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "dismissWithinMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "snackbar": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "component": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+        },
+        "variant": {
+          "enum": [
+            "neutral",
+            "info",
+            "success",
+            "warning",
+            "error"
+          ]
+        },
+        "message": {
+          "$ref": "#/$defs/matcher"
+        },
+        "messageComponent": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+        },
+        "announcement": {
+          "enum": [
+            "polite",
+            "assertive",
+            "off"
+          ]
+        },
+        "focus": {
+          "enum": [
+            "preserve",
+            "move"
+          ]
+        },
+        "actions": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/snackbarAction"
+          },
+          "minProperties": 0
+        },
+        "dismiss": {
+          "type": "object",
+          "properties": {
+            "close": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*(?:\\.[A-Za-z][A-Za-z0-9_-]*)*$"
+            },
+            "escape": {
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "patternProperties": {
+            "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        "lifetime": {
+          "$ref": "#/$defs/lifetime"
+        },
+        "checks": {
+          "$ref": "#/$defs/snackbarChecks"
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        }
+      },
+      "required": [
+        "description",
+        "component",
+        "variant",
+        "message"
+      ],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "snackbarPolicy": {
+      "type": "object",
+      "properties": {
+        "placement": {
+          "enum": [
+            "top-start",
+            "top-center",
+            "top-end",
+            "bottom-start",
+            "bottom-center",
+            "bottom-end"
+          ]
+        },
+        "maxVisible": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "order": {
+          "enum": [
+            "oldestFirst",
+            "newestFirst"
+          ]
+        },
+        "overflow": {
+          "enum": [
+            "queue",
+            "replaceOldest"
+          ]
+        }
+      },
+      "required": [],
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "snackbarOverride": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/matcher"
+        },
+        "variant": {
+          "enum": [
+            "neutral",
+            "info",
+            "success",
+            "warning",
+            "error"
+          ]
+        },
+        "announcement": {
+          "enum": [
+            "polite",
+            "assertive",
+            "off"
+          ]
+        },
+        "focus": {
+          "enum": [
+            "preserve",
+            "move"
+          ]
+        },
+        "lifetime": {
+          "$ref": "#/$defs/lifetime"
+        },
+        "checks": {
+          "$ref": "#/$defs/snackbarChecks"
+        }
+      },
+      "patternProperties": {
+        "^x-[A-Za-z0-9][A-Za-z0-9._-]*$": {}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "message"
+          ],
+          "properties": {
+            "message": {}
+          }
+        },
+        {
+          "required": [
+            "variant"
+          ],
+          "properties": {
+            "variant": {}
+          }
+        },
+        {
+          "required": [
+            "announcement"
+          ],
+          "properties": {
+            "announcement": {}
+          }
+        },
+        {
+          "required": [
+            "focus"
+          ],
+          "properties": {
+            "focus": {}
+          }
+        },
+        {
+          "required": [
+            "lifetime"
+          ],
+          "properties": {
+            "lifetime": {}
+          }
+        },
+        {
+          "required": [
+            "checks"
+          ],
+          "properties": {
+            "checks": {}
+          }
+        }
+      ]
+    }
+  }
+}
