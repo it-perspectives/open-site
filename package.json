@@ -5,7 +5,7 @@
   "type": "module",
   "license": "MIT",
   "engines": {
-    "node": ">=22"
+    "node": "^22.0.0 || ^24.0.0 || ^26.0.0"
   },
   "repository": {
     "type": "git",
@@ -42,7 +42,9 @@
     "lint": "node bin/opensite.js lint examples/opensite.yaml examples/opensite.json --warnings-as-errors",
     "verify": "npm test && npm run test:types && npm run lint",
     "release:prepare": "npm run verify && node scripts/prepare-release.js",
-    "prepack": "npm run verify"
+    "prepack": "npm run verify",
+    "deploy": "node scripts/deploy.js",
+    "tooling:smoke-npm": "node scripts/smoke-package.js"
   },
   "dependencies": {
     "ajv": "8.20.0",

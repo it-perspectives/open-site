@@ -107,7 +107,7 @@ export interface Page extends Extensions {
   snackbars?: Record<string, Snackbar>; snackbarPolicy?: SnackbarPolicy;
 }
 export interface SiteSpec extends Extensions {
-  $schema?: 'https://raw.githubusercontent.com/it-perspectives/open-site/main/schemas/opensite-0.1.0.schema.json';
+  $schema?: 'https://raw.githubusercontent.com/it-perspectives/open-site/specification-v0.1.0/schemas/opensite-0.1.0.schema.json';
   opensite: '0.1.0';
   info: Extensions & { title: string; version: string; description?: string };
   pages: Record<string, Page>;

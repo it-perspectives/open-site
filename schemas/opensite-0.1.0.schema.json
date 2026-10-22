@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/it-perspectives/open-site/main/schemas/opensite-0.1.0.schema.json",
+  "$id": "https://raw.githubusercontent.com/it-perspectives/open-site/specification-v0.1.0/schemas/opensite-0.1.0.schema.json",
   "title": "OpenSite 0.1.0 website contract",
   "description": "Framework-independent website QA contracts: pages, components, expectations, states, variants, access, forms, outcomes, reusable components, metadata, and snackbars.",
   "type": "object",
   "properties": {
     "$schema": {
-      "const": "https://raw.githubusercontent.com/it-perspectives/open-site/main/schemas/opensite-0.1.0.schema.json"
+      "const": "https://raw.githubusercontent.com/it-perspectives/open-site/specification-v0.1.0/schemas/opensite-0.1.0.schema.json"
     },
     "opensite": {
       "const": "0.1.0"

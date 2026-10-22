@@ -21,7 +21,7 @@ OpenSite separates an independent specification from its reference tools.
 | --- | --- |
 | [SPEC.md](SPEC.md) | Normative fields, serialization, semantics, and compatibility rules. |
 | [Versioned JSON Schema](schemas/opensite-0.1.0.schema.json) | Document validation and editor completion for JSON and YAML. |
-| Node.js library and CLI | Parsing, semantic lint, query validation, and URL construction; Node.js 22+. |
+| Node.js library and CLI | Parsing, semantic lint, query validation, and URL construction; Node.js 22, 24 and 26. |
 | [Locator reference](docs/locators.md) | Describes component addresses independently of automation libraries. |
 
 The contract works with any frontend framework and can be consumed by tools in
@@ -215,6 +215,17 @@ npm run verify                 # Unit/CLI tests, TypeScript compatibility, examp
 npm run release:prepare        # Verify and write versioned artifacts to dist/
 node scripts/smoke-package.js  # Install and exercise the tarball in a temporary consumer
 ```
+
+To release an already reviewed and committed version from clean `main`:
+
+```sh
+npm run deploy 0.1.0
+```
+
+This creates and atomically pushes `main` and `specification-v0.1.0` after checks.
+The shared open-tooling v0.1.0 workflow validates Node.js 22/24/26 and creates a GitHub Release with the
+package, source archive, schema, specification, examples, changelog, notes, and
+checksums. It does not publish npm. See [release instructions](docs/releases.md).
 
 A valid contract documents intended UI behavior; browser tests must still prove
 that the deployed site meets it. Fixture/session setup, execution of declared

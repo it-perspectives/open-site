@@ -1,0 +1,16 @@
+name: Release OpenSite
+on:
+  push:
+    tags: ['specification-v*']
+permissions:
+  contents: write
+  id-token: write
+  packages: write
+jobs:
+  release:
+    # open-tooling v0.1.0
+    uses: it-perspectives/open-tooling/.github/workflows/release.yml@0ac78fd5a1bc8c567d453e36e8e13224df62d74d
+    with:
+      tooling-ref: 0ac78fd5a1bc8c567d453e36e8e13224df62d74d
+      # Remove this migration exception once both pending products are implemented.
+      require-complete: false

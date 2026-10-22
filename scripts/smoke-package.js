@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const { version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-const tarball = join(root, 'dist', `it-perspectives-opensite-${version}.tgz`);
+const tarball = process.env.OPEN_TOOLING_NPM_TARBALL || join(root, 'dist', `it-perspectives-opensite-${version}.tgz`);
 const directory = mkdtempSync(join(tmpdir(), 'opensite-consumer-'));
 const run = (command, args) => {
   const output = spawnSync(command, args, { cwd: directory, encoding: 'utf8' });

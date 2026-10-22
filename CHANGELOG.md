@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 - Unreleased
+## 0.1.0 — Initial specification
 
 Initial OpenSite draft:
 
@@ -15,3 +15,4 @@ Initial OpenSite draft:
 - Interface variants, local reusable components, QA metadata, transitions and negative URL outcomes.
 - Snackbar messages, actions, dismissal, lifetime, timing checks, stacking and localization.
 - Pure data resolution and form-value validation APIs with TypeScript declarations.
+- Tag-driven GitHub releases, versioned release notes and source archives, and guarded atomic deploy command.

@@ -55,7 +55,7 @@ than extension properties.
 | `variants` | No | Nonempty catalog of named interface variants. |
 | `meta` | No | QA metadata. |
 | `snackbarPolicy` | No | Shared notification stacking and placement policy. |
-| `$schema` | No | Exactly `https://raw.githubusercontent.com/it-perspectives/open-site/main/schemas/opensite-0.1.0.schema.json`. An editor hint, never a validator download instruction. |
+| `$schema` | No | Exactly `https://raw.githubusercontent.com/it-perspectives/open-site/specification-v0.1.0/schemas/opensite-0.1.0.schema.json`. An editor hint, never a validator download instruction. |
 
 Info requires nonblank string `title` and `version`; optional `description`
 is a string. `info.version` versions the application's website contract,
